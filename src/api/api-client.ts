@@ -10,16 +10,19 @@ export type ApiError = {
 
 const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
-if (!apiBaseUrl) {
-	throw new Error(
-		"NEXT_PUBLIC_API_BASE_URL must be configured before making API requests.",
-	);
-}
-
 export const apiClient = axios.create({
 	baseURL: apiBaseUrl,
 	headers: { Accept: "application/json" },
 	timeout: 10_000,
+});
+
+apiClient.interceptors.request.use((config) => {
+	if (!apiBaseUrl) {
+		throw new Error(
+			"NEXT_PUBLIC_API_BASE_URL must be configured before making API requests.",
+		);
+	}
+	return config;
 });
 
 export function toApiError(error: unknown): ApiError {
