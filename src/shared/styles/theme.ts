@@ -10,6 +10,9 @@ export const themes: Record<'light' | 'dark', DefaultTheme> = {
       border: '#e7e8eb',
       primary: '#17243a',
       accent: '#f28c28',
+      footerBackground: '#17243a',
+      footerText: '#f5f7fa',
+      accentForeground: '#17243a',
     },
   },
   dark: {
@@ -21,6 +24,9 @@ export const themes: Record<'light' | 'dark', DefaultTheme> = {
       border: '#344154',
       primary: '#f5f7fa',
       accent: '#ff9c3d',
+      footerBackground: '#0b1220',
+      footerText: '#f5f7fa',
+      accentForeground: '#17243a',
     },
   },
 };

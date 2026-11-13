@@ -1,6 +1,32 @@
 import { createGlobalStyle } from "styled-components";
 
 export const GlobalStyles = createGlobalStyle`
+  :root {
+    --nova-background: #fffdf9;
+    --nova-surface: #ffffff;
+    --nova-text: #17243a;
+    --nova-muted-text: #667085;
+    --nova-border: #e7e8eb;
+    --nova-primary: #17243a;
+    --nova-accent: #f28c28;
+    --nova-footer-background: #17243a;
+    --nova-footer-text: #f5f7fa;
+    --nova-accent-foreground: #17243a;
+  }
+
+  html[data-theme="dark"] {
+    --nova-background: #111827;
+    --nova-surface: #1b2638;
+    --nova-text: #f5f7fa;
+    --nova-muted-text: #aab4c3;
+    --nova-border: #344154;
+    --nova-primary: #f5f7fa;
+    --nova-accent: #ff9c3d;
+    --nova-footer-background: #0b1220;
+    --nova-footer-text: #f5f7fa;
+    --nova-accent-foreground: #17243a;
+  }
+
   *, 
   *::before, 
   *::after { 
@@ -14,8 +40,8 @@ export const GlobalStyles = createGlobalStyle`
   }
 
   body {
-    background: ${({ theme }) => theme.colors.background};
-    color: ${({ theme }) => theme.colors.text};
+    background: var(--nova-background);
+    color: var(--nova-text);
     font-family: var(--font-store, Arial, sans-serif);
     -webkit-font-smoothing: antialiased;
   }
@@ -33,7 +59,7 @@ export const GlobalStyles = createGlobalStyle`
   }
 
   :focus-visible {
-    outline: 3px solid ${({ theme }) => theme.colors.accent}; 
+    outline: 3px solid var(--nova-accent);
     outline-offset: 3px; 
   }
 

@@ -1,50 +1,56 @@
-import type { Metadata } from 'next';
-import { Suspense, type ReactNode } from 'react';
-import { notFound } from 'next/navigation';
-import { NextIntlClientProvider } from 'next-intl';
-import { hasLocale } from 'next-intl';
-import { getMessages, setRequestLocale } from 'next-intl/server';
-import { RequestThemeProvider } from '@/context/request-theme-provider';
-import { routing } from '@/i18n/routing';
-import { StyledComponentsRegistry } from '@/components/styled-components-registry';
-import { AppProviders } from '@/shared/providers/app-providers';
-import { getSiteUrl } from '@/shared/utils/site-url';
+import { StyledComponentsRegistry } from "@/components/styled-components-registry";
+import { getDirection } from "@/i18n/config";
+import { routing } from "@/i18n/routing";
+import { AppProviders } from "@/shared/providers/app-providers";
+import { isThemeMode, THEME_COOKIE_NAME } from "@/shared/types/theme";
+import { getSiteUrl } from "@/shared/utils/site-url";
+import type { Metadata } from "next";
+import { hasLocale, NextIntlClientProvider } from "next-intl";
+import { getMessages } from "next-intl/server";
+import { cookies } from "next/headers";
+import { notFound } from "next/navigation";
+import type { ReactNode } from "react";
 
 export const metadata: Metadata = {
-  title: 'NOVA Store',
-  metadataBase: getSiteUrl(),
+	title: "NOVA Store",
+	metadataBase: getSiteUrl(),
 };
 
 export function generateStaticParams() {
-  return routing.locales.map((locale) => ({ locale }));
+	return routing.locales.map((locale) => ({ locale }));
 }
 
-export default async function LocaleLayout({
-  children,
-  params,
-}: Readonly<{ children: ReactNode; params: Promise<{ locale: string }> }>) {
-  const { locale } = await params;
-  if (!hasLocale(routing.locales, locale)) notFound();
+type Props = {
+	children: ReactNode;
+	params: Promise<{ locale: string }>;
+};
 
-  setRequestLocale(locale);
-  const messages = await getMessages();
-  const direction = locale === 'fa' ? 'rtl' : 'ltr';
+export default async function LocaleLayout(props: Props) {
+	const { children, params } = props;
+	const { locale } = await params;
+	if (!hasLocale(routing.locales, locale)) notFound();
 
-  return (
-    <html lang={locale} dir={direction} data-theme="light">
-      <body>
-        <StyledComponentsRegistry>
-          <NextIntlClientProvider locale={locale} messages={messages}>
-            <Suspense fallback={<RequestThemeFallback>{children}</RequestThemeFallback>}>
-              <RequestThemeProvider>{children}</RequestThemeProvider>
-            </Suspense>
-          </NextIntlClientProvider>
-        </StyledComponentsRegistry>
-      </body>
-    </html>
-  );
-}
+	const [messages, cookieStore] = await Promise.all([
+		getMessages(),
+		cookies(),
+	]);
+	const cookieMode = cookieStore.get(THEME_COOKIE_NAME)?.value;
+	const theme = isThemeMode(cookieMode) ? cookieMode : "light";
 
-function RequestThemeFallback({ children }: Readonly<{ children: ReactNode }>) {
-  return <AppProviders initialTheme="system">{children}</AppProviders>;
+	return (
+		<html lang={locale} dir={getDirection(locale)} data-theme={theme}>
+			<body>
+				<StyledComponentsRegistry>
+					<NextIntlClientProvider
+						locale={locale}
+						messages={messages}
+					>
+						<AppProviders initialTheme={theme}>
+							{children}
+						</AppProviders>
+					</NextIntlClientProvider>
+				</StyledComponentsRegistry>
+			</body>
+		</html>
+	);
 }
