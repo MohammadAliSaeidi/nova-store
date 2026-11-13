@@ -10,6 +10,9 @@ declare module 'styled-components' {
       border: string;
       primary: string;
       accent: string;
+      footerBackground: string;
+      footerText: string;
+      accentForeground: string;
     };
   }
 }
