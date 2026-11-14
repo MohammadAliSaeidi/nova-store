@@ -80,6 +80,7 @@ export const CartProductInfo = styled.div`
 `;
 
 export const CartProductTitle = styled.h2`
+	grid-column: 1 / -1;
 	margin: 0;
 	color: var(--nova-text);
 	font-size: 1rem;
@@ -101,10 +102,7 @@ export const CartControls = styled.div`
 	gap: 0.7rem;
 	flex-wrap: wrap;
 
-	@media (min-width: 600px) {
-		grid-column: auto;
-		justify-content: flex-end;
-	}
+	justify-content: flex-start;
 `;
 
 export const CartRowTotal = styled.p`

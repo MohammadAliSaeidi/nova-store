@@ -41,6 +41,9 @@ export function CartItemRow({
 
 	return (
 		<CartRow>
+			<CartProductTitle dir="auto">
+				{product?.title ?? t("unavailableProduct")}
+			</CartProductTitle>
 			<CartImageFrame>
 				{product ? (
 					<Image
@@ -53,9 +56,6 @@ export function CartItemRow({
 				) : null}
 			</CartImageFrame>
 			<CartProductInfo>
-				<CartProductTitle dir="auto">
-					{product?.title ?? t("unavailableProduct")}
-				</CartProductTitle>
 				{product ? (
 					<CartMuted dir="auto">{product.category}</CartMuted>
 				) : null}
