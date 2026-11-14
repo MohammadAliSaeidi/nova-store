@@ -1,15 +1,22 @@
 import { StyledComponentsRegistry } from "@/components/styled-components-registry";
 import { getDirection } from "@/i18n/config";
 import { routing } from "@/i18n/routing";
-import { AppProviders } from "@/shared/providers/app-providers";
-import { isThemeMode, THEME_COOKIE_NAME } from "@/shared/types/theme";
-import { getSiteUrl } from "@/shared/utils/site-url";
+import { getSiteUrl } from "@/utils/site-url";
 import type { Metadata } from "next";
+import localFont from "next/font/local";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { getMessages } from "next-intl/server";
-import { cookies } from "next/headers";
 import { notFound } from "next/navigation";
-import type { ReactNode } from "react";
+import { Suspense, type ReactNode } from "react";
+import { RequestThemeProvider } from "@/context/request-theme-provider";
+
+const vazirmatn = localFont({
+	src: "../../assets/fonts/Vazirmatn-Regular.woff2",
+	weight: "400",
+	style: "normal",
+	display: "swap",
+	variable: "--font-store",
+});
 
 export const metadata: Metadata = {
 	title: "NOVA Store",
@@ -25,29 +32,29 @@ type Props = {
 	params: Promise<{ locale: string }>;
 };
 
-export default async function LocaleLayout(props: Props) {
-	const { children, params } = props;
+export default async function LocaleLayout({ children, params }: Props) {
 	const { locale } = await params;
 	if (!hasLocale(routing.locales, locale)) notFound();
 
-	const [messages, cookieStore] = await Promise.all([
-		getMessages(),
-		cookies(),
-	]);
-	const cookieMode = cookieStore.get(THEME_COOKIE_NAME)?.value;
-	const theme = isThemeMode(cookieMode) ? cookieMode : "light";
+	const messages = await getMessages({ locale });
 
 	return (
-		<html lang={locale} dir={getDirection(locale)} data-theme={theme}>
+		<html
+			lang={locale}
+			dir={getDirection(locale)}
+			className={locale === "fa" ? vazirmatn.variable : undefined}
+		>
 			<body>
 				<StyledComponentsRegistry>
 					<NextIntlClientProvider
 						locale={locale}
 						messages={messages}
 					>
-						<AppProviders initialTheme={theme}>
-							{children}
-						</AppProviders>
+						<Suspense fallback={null}>
+							<RequestThemeProvider>
+								{children}
+							</RequestThemeProvider>
+						</Suspense>
 					</NextIntlClientProvider>
 				</StyledComponentsRegistry>
 			</body>
