@@ -1,26 +1,16 @@
 "use client";
 
 import { useCatalogControls } from "@/hooks/use-catalog-controls";
-import { usePagination } from "@/hooks/use-pagination";
 import { useCategories } from "@/hooks/use-categories";
+import { usePagination } from "@/hooks/use-pagination";
+import { useProducts } from "@/hooks/use-products";
 import { useCartStore } from "@/storage/cart-store";
 import { filterAndSortProducts } from "@/utils/catalog";
 import { useLocale, useTranslations } from "next-intl";
 import { useMemo } from "react";
-import {
-	CatalogSection,
-	CatalogTopline,
-	HeadingAccent,
-	ResultCount,
-	SectionHeading,
-	StatusPanel,
-} from "../storefront.styles";
-import { CatalogSortControl } from "./catalog-sort-control";
+import { CatalogSection } from "../storefront.styles";
 import { CategoryFilter } from "./category-filter";
-import { PaginationControls } from "./pagination-controls";
-import ProductGrid from "./product-grid";
-import { RequestError } from "./request-error";
-import { useProducts } from "@/hooks/use-products";
+import { ProductResults } from "./product-results";
 
 type InitialFailures = Readonly<{ products: boolean; categories: boolean }>;
 type Props = Readonly<{ initialFailures: InitialFailures }>;
@@ -67,7 +57,7 @@ export function CatalogBrowser({ initialFailures }: Props) {
 	const visibleProducts = useMemo(
 		() =>
 			filterAndSortProducts(products, {
-				search,
+				search: search ?? "",
 				category: selectedCategory,
 				sort,
 				locale,
@@ -80,13 +70,6 @@ export function CatalogBrowser({ initialFailures }: Props) {
 		CATALOG_PAGE_SIZE,
 		normalizePage,
 	);
-
-	const emptyMessage =
-		productsStatus === "ready" && visibleProducts.length === 0
-			? products.length === 0
-				? t("emptyCatalog")
-				: t("emptyResults")
-			: null;
 
 	return (
 		<CatalogSection
@@ -101,57 +84,20 @@ export function CatalogBrowser({ initialFailures }: Props) {
 				onRetry={() => void categoriesQuery.refetch()}
 			/>
 
-			<div id="products">
-				<CatalogTopline>
-					<div>
-						<SectionHeading id="catalog-section-title">
-							{t("productsHeading")}
-						</SectionHeading>
-						<HeadingAccent aria-hidden="true" />
-					</div>
-					{productsStatus === "ready" && (
-						<ResultCount>
-							{t("productCount", {
-								count: visibleProducts.length,
-							})}
-						</ResultCount>
-					)}
-				</CatalogTopline>
-
-				<CatalogSortControl sort={sort} onChange={setSort} />
-
-				{productsStatus === "error" && (
-					<RequestError
-						message={t("productsError")}
-						onRetry={() => void productsQuery.refetch()}
-					/>
-				)}
-				{productsStatus === "loading" && (
-					<StatusPanel role="status" aria-live="polite">
-						{t("loadingProducts")}
-					</StatusPanel>
-				)}
-				{emptyMessage && (
-					<StatusPanel role="status" aria-live="polite">
-						{emptyMessage}
-					</StatusPanel>
-				)}
-				{pageItems.length > 0 && (
-					<ProductGrid
-						products={pageItems}
-						isCartHydrated={isCartHydrated}
-						onAddToCart={addItem}
-					/>
-				)}
-				{pageCount > 1 && (
-					<PaginationControls
-						currentPage={currentPage}
-						pageCount={pageCount}
-						locale={locale}
-						onPageChange={setPage}
-					/>
-				)}
-			</div>
+			<ProductResults
+				status={productsStatus}
+				totalProducts={products.length}
+				visibleProducts={visibleProducts.length}
+				pageItems={pageItems}
+				sort={sort}
+				currentPage={currentPage}
+				pageCount={pageCount}
+				isCartHydrated={isCartHydrated}
+				onSortChange={setSort}
+				onRetry={() => void productsQuery.refetch()}
+				onAddToCart={addItem}
+				onPageChange={setPage}
+			/>
 		</CatalogSection>
 	);
 }
