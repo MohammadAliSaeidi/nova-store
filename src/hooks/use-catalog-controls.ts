@@ -1,11 +1,11 @@
 "use client";
 
-import { useCallback } from "react";
-import { isCatalogSort, type CatalogSort } from "@/utils/catalog";
 import {
-	useUrlQueryParams,
+	useSearchParam,
 	type QueryHistoryMode,
-} from "@/hooks/use-url-query-params";
+} from "@/hooks/use-search-param";
+import { isCatalogSort, type CatalogSort } from "@/utils/catalog";
+import { useCallback } from "react";
 
 function parsePage(value: string | null): number {
 	if (!value || !/^\d+$/.test(value)) return 1;
@@ -14,42 +14,61 @@ function parsePage(value: string | null): number {
 }
 
 export function useCatalogControls() {
-	const { searchParams, updateQueryParams } = useUrlQueryParams();
+	const { value: search, updateQueryParams: updateSearchQueryParams } =
+		useSearchParam("q");
 
-	const search = searchParams.get("q") ?? "";
-	const category = searchParams.get("category") || null;
-	const sortValue = searchParams.get("sort");
-	const sort: CatalogSort = isCatalogSort(sortValue) ? sortValue : "featured";
-	const page = parsePage(searchParams.get("page"));
+	const categoryParam = useSearchParam("category");
+	const category = categoryParam.value || null;
+
+	const { value: sortValue, updateQueryParams: updateSortQueryParams } =
+		useSearchParam("sort");
+
+	const { value: pageValue, updateQueryParams: updatePageQueryParams } =
+		useSearchParam("page");
+
+	const sort: CatalogSort = isCatalogSort(sortValue)
+		? sortValue
+		: "featured";
+
+	const page = parsePage(pageValue);
 
 	const setSearch = useCallback(
 		(value: string) => {
-			updateQueryParams({ q: value, page: null }, "replace");
+			updateSearchQueryParams({ q: value, page: null }, "replace");
 		},
-		[updateQueryParams],
+		[updateSearchQueryParams],
 	);
+
 	const setSelectedCategory = useCallback(
 		(value: string | null) =>
-			updateQueryParams({ category: value, page: null }, "push"),
-		[updateQueryParams],
+			categoryParam.updateQueryParams(
+				{ category: value, page: null },
+				"push",
+			),
+		[categoryParam],
 	);
+
 	const setSort = useCallback(
 		(value: CatalogSort) => {
-			updateQueryParams(
+			updateSortQueryParams(
 				{ sort: value === "featured" ? null : value, page: null },
 				"push",
 			);
 		},
-		[updateQueryParams],
+		[updateSortQueryParams],
 	);
+
 	const updatePage = useCallback(
 		(value: number, mode: QueryHistoryMode) => {
 			const nextPage = Number.isFinite(value)
 				? Math.max(1, Math.trunc(value))
 				: 1;
-			updateQueryParams({ page: nextPage === 1 ? null : nextPage }, mode);
+			updatePageQueryParams(
+				{ page: nextPage === 1 ? null : nextPage },
+				mode,
+			);
 		},
-		[updateQueryParams],
+		[updatePageQueryParams],
 	);
 	const setPage = useCallback(
 		(value: number) => updatePage(value, "push"),
