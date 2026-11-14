@@ -37,7 +37,8 @@ function readStoredItems(value: unknown): CartItem[] {
 		}
 		const current = byProduct.get(candidate.productId) ?? 0;
 		const next = current + candidate.quantity;
-		if (Number.isSafeInteger(next)) byProduct.set(candidate.productId, next);
+		if (Number.isSafeInteger(next))
+			byProduct.set(candidate.productId, next);
 	}
 
 	return Array.from(byProduct, ([productId, quantity]) => ({
@@ -57,18 +58,30 @@ export const useCartStore = create<CartState>()(
 			isHydrated: false,
 			addItem: (productId) =>
 				set((state) => {
-					const existing = state.items.find((item) => item.productId === productId);
+					const existing = state.items.find(
+						(item) => item.productId === productId,
+					);
 					if (existing) {
-						if (existing.quantity === Number.MAX_SAFE_INTEGER) return state;
+						if (existing.quantity === Number.MAX_SAFE_INTEGER)
+							return state;
 						return {
 							items: state.items.map((item) =>
 								item.productId === productId
-									? { ...item, quantity: item.quantity + 1 }
+									? {
+											...item,
+											quantity:
+												item.quantity + 1,
+										}
 									: item,
 							),
 						};
 					}
-					return { items: [...state.items, { productId, quantity: 1 }] };
+					return {
+						items: [
+							...state.items,
+							{ productId, quantity: 1 },
+						],
+					};
 				}),
 			increase: (productId) =>
 				set((state) => ({
@@ -89,7 +102,9 @@ export const useCartStore = create<CartState>()(
 				})),
 			removeItem: (productId) =>
 				set((state) => ({
-					items: state.items.filter((item) => item.productId !== productId),
+					items: state.items.filter(
+						(item) => item.productId !== productId,
+					),
 				})),
 			clear: () => set({ items: [] }),
 		}),

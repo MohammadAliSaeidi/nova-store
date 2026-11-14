@@ -4,6 +4,10 @@
     "description": "زیرساخت فروشگاه NOVA آمادهٔ توسعه است.",
     "language": "فارسی"
   },
+  "seo": {
+    "homeTitle": "خرید از فروشگاه NOVA",
+    "homeDescription": "محصولات فروشگاه NOVA را ببینید، کالاهای موردنظرتان را پیدا کنید و انتخاب کنید."
+  },
   "catalog": {
     "home": "خانه",
     "productsLink": "محصولات",

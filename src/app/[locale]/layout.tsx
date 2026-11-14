@@ -19,7 +19,10 @@ const vazirmatn = localFont({
 });
 
 export const metadata: Metadata = {
-	title: "NOVA Store",
+	title: {
+		default: "NOVA Store",
+		template: "%s | NOVA Store",
+	},
 	metadataBase: getSiteUrl(),
 };
 

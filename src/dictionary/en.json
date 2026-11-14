@@ -4,6 +4,10 @@
     "description": "The NOVA Store foundation is ready for development.",
     "language": "English"
   },
+  "seo": {
+    "homeTitle": "Shop the NOVA Store",
+    "homeDescription": "Explore the NOVA Store catalog, discover products, and find your next favorite."
+  },
   "catalog": {
     "home": "Home",
     "productsLink": "Products",

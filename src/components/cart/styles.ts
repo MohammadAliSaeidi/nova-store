@@ -42,9 +42,9 @@ export const CartList = styled.ul`
 export const CartRow = styled.li`
 	min-width: 0;
 	display: grid;
-	grid-template-columns: 5rem minmax(0, 1fr);
-	gap: 0.8rem;
-	padding: 0.85rem;
+	grid-template-columns: 4rem minmax(0, 1fr);
+	gap: 0.65rem;
+	padding: 0.7rem;
 	border: 1px solid var(--nova-border);
 	border-radius: 0.9rem;
 	background: var(--nova-surface);
@@ -58,8 +58,8 @@ export const CartRow = styled.li`
 
 export const CartImageFrame = styled.div`
 	position: relative;
-	width: 5rem;
-	height: 5rem;
+	width: 4rem;
+	height: 4rem;
 	display: grid;
 	place-items: center;
 	padding: 0.35rem;
@@ -84,7 +84,7 @@ export const CartProductTitle = styled.h2`
 	color: var(--nova-text);
 	font-size: 1rem;
 	line-height: 1.45;
-	overflow-wrap: anywhere;
+	overflow-wrap: break-word;
 `;
 
 export const CartMuted = styled.p`
