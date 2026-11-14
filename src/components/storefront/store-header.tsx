@@ -1,21 +1,27 @@
-import { Suspense } from "react";
 import { useLocale } from "next-intl";
+import { Suspense } from "react";
+import HeaderControls from "./header-controls/header-controls";
 import {
+	BagMark,
+	BrandLink,
 	HeaderControlArea,
 	HeaderInner,
 	HeaderRoot,
 	HeaderSearch,
-	BagMark,
-	BrandLink,
 	SearchInput,
 } from "./storefront.styles";
-import { HeaderControls } from "./header-controls";
 
 function HeaderControlsFallback() {
 	return (
 		<HeaderControlArea aria-hidden="true">
 			<HeaderSearch>
-				<SearchInput type="search" value="" disabled readOnly tabIndex={-1} />
+				<SearchInput
+					type="search"
+					value=""
+					disabled
+					readOnly
+					tabIndex={-1}
+				/>
 			</HeaderSearch>
 		</HeaderControlArea>
 	);
