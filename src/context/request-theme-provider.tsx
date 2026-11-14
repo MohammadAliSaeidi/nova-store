@@ -10,5 +10,11 @@ export async function RequestThemeProvider({
 	const cookieMode = cookieStore.get(THEME_COOKIE_NAME)?.value;
 	const initialTheme = isThemeMode(cookieMode) ? cookieMode : "light";
 
-	return <AppProviders initialTheme={initialTheme}>{children}</AppProviders>;
+	return (
+		<div data-theme={initialTheme} style={{ display: "contents" }}>
+			<AppProviders initialTheme={initialTheme}>
+				{children}
+			</AppProviders>
+		</div>
+	);
 }

@@ -66,5 +66,30 @@
       "men's clothing": "Men's clothing",
       "women's clothing": "Women's clothing"
     }
+  },
+  "cart": {
+    "title": "Shopping cart",
+    "summary": "Cart summary",
+    "empty": "Your cart is empty",
+    "emptyHint": "Browse the store to add products to your cart.",
+    "browseProducts": "Browse products",
+    "unitPrice": "Unit price",
+    "lineTotal": "Line total",
+    "quantity": "Quantity",
+    "quantityForProduct": "Quantity for {product}",
+    "increase": "Increase quantity",
+    "decrease": "Decrease quantity",
+    "remove": "Remove",
+    "clear": "Clear cart",
+    "itemsCount": "Items: {count}",
+    "total": "Total",
+    "addToCart": "Add to cart",
+    "added": "Added to cart",
+    "badgeLabel": "{count} items in cart",
+    "loading": "Preparing your cart…",
+    "loadingProducts": "Loading product details…",
+    "productsError": "Product details could not be loaded.",
+    "retry": "Try again",
+    "unavailableProduct": "This product is no longer available"
   }
 }
