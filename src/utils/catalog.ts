@@ -1,6 +1,17 @@
 import type { Product } from "@/types/product";
 
-export type CatalogSort = "featured" | "title-asc" | "price-asc" | "price-desc";
+export const CATALOG_SORTS = [
+	"featured",
+	"title-asc",
+	"price-asc",
+	"price-desc",
+] as const;
+
+export type CatalogSort = (typeof CATALOG_SORTS)[number];
+
+export function isCatalogSort(value: string | null): value is CatalogSort {
+	return value !== null && CATALOG_SORTS.some((sort) => sort === value);
+}
 
 export type CatalogFilters = {
 	search: string;
